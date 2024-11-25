@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import LenisScroll from "@/components/LanisScroll";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
+const netflixSan = localFont({
+  src: "./fonts/NetflixSansBold.otf",
+  variable: "--font-netflix-san",
   weight: "100 900",
 });
 
@@ -24,12 +20,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
+    <html lang="en" className="no-scrollbar">
+      <LenisScroll>
+        <body
+          className={`${netflixSan.className} antialiased w-screen min-h-screen relative overflow-hidden`}
+        >
+          {children}
+        </body>
+      </LenisScroll>
     </html>
   );
 }
