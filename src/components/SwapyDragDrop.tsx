@@ -22,7 +22,7 @@ function SwapyDragDrop({ cards, setCards }: RowProps) {
 
 function Row({ cards, setCards }: RowProps) {
 
-    const [validateUrl,setValidateUrl] = useState('');
+    const [validateUrl, setValidateUrl] = useState('');
     const [swapCard, setSwapCard] = useState(cards);
     const containerRef = useRef<HTMLDivElement>(null); // Ref for the container
 
@@ -53,11 +53,11 @@ function Row({ cards, setCards }: RowProps) {
             setCards(newCards);
         });
 
-        if (cards.length===10) {
+        if (cards.length === 10) {
             let url = '';
 
-            cards.map((c,i)=>{
-                url += i+'='+c.coverImage.large+'&'
+            cards.map((c, i) => {
+                url += i + '=' + c.coverImage.large + '&'
             })
 
             setValidateUrl(url);
@@ -86,21 +86,6 @@ function Row({ cards, setCards }: RowProps) {
 
     return (
         <div className="relative">
-            <div className=" fixed left-0 top-[20vh] flex items-center justify-center gap-4 place-content-center w-screen z-[9999999] pointer-events-none">
-                <div
-                    className="w-12 h-12 p-1 z-[9999] rounded-full cursor-pointer rotate-180 pointer-events-auto"
-                    onClick={scrollLeft}
-                >
-                    <img src="/right.svg" alt="" className=" w-full h-full object-fill" />
-                </div>
-                <div
-                    className="w-12 h-12 z-[9999] p-1 rounded-full cursor-pointer pointer-events-auto"
-                    onClick={scrollRight}
-                >
-                    <img src="/right.svg" alt="" className=" w-full h-full object-fill" />
-                </div>
-            </div>
-
             <div
                 ref={containerRef}
                 className="swapy-container flex w-full h-fit overflow-x-auto no-scrollbar gap-2 p-4 py-8"
@@ -111,10 +96,10 @@ function Row({ cards, setCards }: RowProps) {
                         className="h-[45vh] flex items-end w-[30vh] rounded-xl relative"
                     >
                         <div className="z-[99999] absolute top-6 left-0 text-8xl lg:text-[10vw] leading-5 text-[#fe00b0] font-extrabold tracking-tighter text-center">
-                            {10 - i}
+                            {i+1}
                         </div>
                         <div className="absolute bottom-0 right-1 text-4xl text-[#fff429] font-extrabold tracking-tighter text-center">
-                            {10 - i}
+                            {i+1}
                         </div>
                         <div
                             data-swapy-slot={String(i)}
@@ -135,22 +120,36 @@ function Row({ cards, setCards }: RowProps) {
                 ))}
             </div>
 
-            {
-                cards.length===10 &&
-                <div className="w-full grid place-content-center">
-                <motion.a 
-                animate={{
-                    scale:[1,0.8,1]
-                }}
-                transition={{
-                    repeat:Infinity,
-                    ease: 'easeInOut',
-                    duration: 2,
-                  }}
-                href={`/validate?${validateUrl}`} className=" transition bg-[#2600fe] text-4xl rounded-full py-2 px-8">
-                    To validate
-                </motion.a>
-            </div>}
+            <div className="w-full flex items-center justify-center gap-2">
+                <div
+                    className="w-12 h-12 p-1 z-[9999] rounded-full cursor-pointer rotate-180 pointer-events-auto"
+                    onClick={scrollLeft}
+                >
+                    <img src="/right.svg" alt="" className=" w-full h-full object-fill" />
+                </div>
+                {
+                    cards.length === 10 &&
+
+                    <motion.a
+                        animate={{
+                            scale: [1, 0.8, 1]
+                        }}
+                        transition={{
+                            repeat: Infinity,
+                            ease: 'easeInOut',
+                            duration: 2,
+                        }}
+                        href={`/validate?${validateUrl}`} className=" transition bg-[#2600fe] text-xl md:text-2xl text-nowrap rounded-full py-2 px-8">
+                        To validate
+                    </motion.a>
+                }
+                <div
+                    className="w-12 h-12 z-[9999] p-1 rounded-full cursor-pointer pointer-events-auto"
+                    onClick={scrollRight}
+                >
+                    <img src="/right.svg" alt="" className=" w-full h-full object-fill" />
+                </div>
+            </div>
 
         </div>
     );

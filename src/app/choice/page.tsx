@@ -171,14 +171,13 @@ export default function Component() {
 
   return (
     <div ref={containerRef} className={`no-scrollbar relative min-h-screen max-w-screen ${clikedAnime !== -1 ? 'overflow-hidden' : ' overflow-y-scroll'} bg-[#0061fe]`}>
-      <div id='top'/>
-      <div className="py-4 mx-[0] grid grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-8">
+      <div className="p-4 mx-[0] grid grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-8">
         {columns.map((column, columnIndex) => {
-          const columnY = useTransform(scrollYProgress, [0, 1], [0, -500 * ((columnIndex + 1) % 3)])
+          const columnY = useTransform(scrollYProgress, [0, 1], [0, -250 * ((columnIndex + 1) % 2)])
           return (
             <motion.div
               key={columnIndex}
-              className={`flex-1 transition ${columnIndex % 2 ? ' mt-[0]' : ' mt-[-10vh]'} ${columnIndex === 0 || columnIndex === 4 ? ' hidden md:block' : ' visible'}`}
+              className={`flex-1 transition-all ${columnIndex === 0 || columnIndex === 4 ? ' hidden md:block' : ' visible'}`}
               style={{ y: columnY }}
             >
               {column.map((anime: Anime) => {
@@ -198,7 +197,7 @@ export default function Component() {
                       rotate: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 8 * (columnIndex < 2 ? -1 : 1) : 0)
                     }}
                     whileHover={{
-                      rotate: 4 * (columnIndex < 2 ? -1 : 1),
+                      rotate: clikedAnime !== -1 ? 0 : 2 * (columnIndex < 2 ? -1 : 1),
                     }}
                     transition={{
                       ease: 'easeInOut',
@@ -215,15 +214,13 @@ export default function Component() {
                           x: 0,
                           y: 0,
                           width: '100%',
-                          filter: 'grayscale(1)',
                           opacity:1,
                         }}
                         animate={{
                           x: (columnIndex === 0 || columnIndex === 4 ? 600 : (columnIndex === 1 || columnIndex === 3 ? 200 : 0)) * (columnIndex < 2 ? 1 : -1),
                           y: 1000,
                           width: '2.75rem',
-                          rotate: 12 * (columnIndex < 2 ? 1 : -1),
-                          filter: 'grayscale(0)',
+                          rotate: 4 * (columnIndex < 2 ? 1 : -1),
                           opacity:0
                         }}
                         transition={{
@@ -245,26 +242,22 @@ export default function Component() {
                       <motion.div
                         initial={{
                           opacity: 0,
-                          y: -100,
-                          width: 0,
-                          height: 0,
+                          y: -10,
                           scale: 0,
                         }}
                         animate={{
                           opacity: 1,
                           y: 0,
-                          width: 'auto',
-                          height: 'auto',
                           scale: 1,
                         }}
                         transition={{
-                          ease: 'easeInOut',
+                          ease: 'easeIn',
                           delay: .5,
                           duration: .4,
                         }}
                         className={`transition text-[#0061fe] w-12 h-16 text-5xl px-1 py-2 absolute ${columnIndex<2 ? 'rounded-bl-xl rounded-tr-xl right-0' : 'rounded-tl-xl rounded-br-xl left-0'} bg-[#fff429] z-50 grid place-content-center tracking-tighter`}
                       >
-                        {10-index}
+                        {index+1}
                       </motion.div>
                     }
 
@@ -301,10 +294,9 @@ export default function Component() {
           )
         })}
       </div>
-      <div ref={loader} className="h-[10vh] w-screen grid place-content-center" >
-        Loading...
+      <div ref={loader} className="h-[10vh] w-screen grid place-content-center text-[#fff429] capitalize" >
+        Searching for Your top animes...
       </div>
-      <div className=" fixed pointer-events-none top-0 inset-0 w-screen h-screen bg-gradient-radial from-transparent to-slate-800 opacity-40 z-20" />
 
       <motion.div
         initial={{
@@ -365,11 +357,9 @@ function SelectedList({ list,setList }: { list: Anime[],setList:Function }) {
         whileHover={{
           width: isExpanded ? '100vw' : '80vw',
         }}
-        className={`' h-fit bg-[#fff429] relative transition rounded-t-xl flex flex-col items-center pointer-events-auto z-[99999] overflow-hidden`}>
+        className={`h-fit bg-[#fff429] relative transition rounded-t-xl flex flex-col items-center pointer-events-auto z-[99999] overflow-hidden`}>
 
         <motion.div
-        layout
-        layoutId='topBlueBar'
           animate={{
             width: isExpanded ? '8rem' : '4rem',
           }}
@@ -460,7 +450,8 @@ function SelectedList({ list,setList }: { list: Anime[],setList:Function }) {
             ease: 'easeInOut',
             duration: .5,
           }}
-          className='grid grid-cols-5 sm:grid-cols-10 justify-center items-center p-2 gap-2 w-full md:w-fit'>
+          onClick={open}
+          className='grid grid-cols-5 sm:grid-cols-10 justify-center items-center p-2 gap-2 w-full md:w-fit cursor-pointer'>
           {
             Array.from({ length: 10 }).map((_, i) => {
 
@@ -468,8 +459,7 @@ function SelectedList({ list,setList }: { list: Anime[],setList:Function }) {
               return (
                 <motion.div
                   key={i}
-                  onClick={open}
-                  className='text-black border border-[#2600fe] rounded md:rounded-lg w-9 lg:w-14 aspect-[5/7] overflow-hidden cursor-pointer'>
+                  className='text-black border border-[#2600fe] rounded md:rounded-lg w-9 lg:w-14 aspect-[5/7] overflow-hidden'>
                   {anime?.coverImage?.large && (
                     <motion.div
                       initial={{
@@ -489,7 +479,7 @@ function SelectedList({ list,setList }: { list: Anime[],setList:Function }) {
                       className=' relative w-full h-full'
                     >
                       <div className='bg-[#2600fe] text-white px-1 absolute top-0 right-0 rounded-bl-lg tracking-tighter text-xs lg:text-base'>
-                        {10-i}
+                        {i+1}
                       </div>
                       <img
                         src={anime.coverImage.large}

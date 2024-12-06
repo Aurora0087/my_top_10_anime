@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en" className="no-scrollbar">
       <LenisScroll>
         <body
-          className={`${netflixSan.className} antialiased w-screen min-h-screen relative overflow-hidden`}
+          className={`${netflixSan.className} antialiased w-screen min-h-screen relative overflow-hidden bg-[#fff429]`}
         >
           {children}
         </body>

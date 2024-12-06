@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer normalize, base, demo;
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -17,13 +20,17 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-netflix-san), Helvetica, sans-serif;
 }
 
 @layer utilities {
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  .netflix-san{
+    font-family: var(--font-netflix-san);
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */
@@ -63,6 +70,14 @@ body {
   transform-style: preserve-3d;
 }
 
+.transform-3d{
+  transform-style: preserve-3d;
+}
+
+.book-perspective{
+  perspective: 500px;
+}
+
 /**/
 .text-stroke{
   -webkit-text-stroke-width: 2px;
@@ -72,4 +87,143 @@ body {
 .text-stroke-yellow{
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: #fff429;
+}
+
+.img-mask{
+  mask-image: url(../../public/imgMask.svg);
+  mask-repeat: no-repeat;
+  mask-size: 100% 0%;
+  mask-position: 0%;
+}
+
+@layer demo {
+  @property --head {
+    initial-value: 1.05;
+    inherits: true;
+    syntax: '<number>';
+  }
+
+  @property --tail {
+    initial-value: 0;
+    inherits: true;
+    syntax: '<number>';
+  }
+  body > svg {
+    width: max(44px, 10vmin);
+    overflow: visible !important;
+  }
+
+  svg g circle {
+    stroke-dasharray: var(--head);
+    stroke-dashoffset: var(--tail);
+  }
+  
+  svg > g {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: spin 3.5s infinite linear reverse;
+  }
+
+  svg > circle {
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  [data-animate='false'] svg > circle {
+    opacity: 1;
+  }
+
+  [data-glow='true'] svg > g {
+    filter: url('#light');
+  }
+
+  [data-animate='true'] svg g circle {
+    animation: draw infinite 2s ease-in-out;
+    animation-direction: reverse;
+    stroke-dasharray: 1.05;
+  }
+
+  @keyframes spin {
+    to {
+      rotate: -360deg;
+    }
+  }
+
+  @keyframes draw {
+    0%,
+    5% {
+      stroke-dashoffset: 1.05;
+    }
+    45%,
+    55% {
+      stroke-dashoffset: 2.1;
+    }
+    95%,
+    100% {
+      stroke-dashoffset: 3.15;
+    }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+
+  [data-theme='light'] {
+    color-scheme: light only;
+  }
+
+  [data-theme='dark'] {
+    color-scheme: dark only;
+  }
+
+  :where(.fluid) {
+    --fluid-min: calc(
+      var(--font-size-min) * pow(var(--font-ratio-min), var(--font-level, 0))
+    );
+    --fluid-max: calc(
+      var(--font-size-max) * pow(var(--font-ratio-max), var(--font-level, 0))
+    );
+    --fluid-preferred: calc(
+      (var(--fluid-max) - var(--fluid-min)) /
+        (var(--font-width-max) - var(--font-width-min))
+    );
+    --fluid-type: clamp(
+      (var(--fluid-min) / 16) * 1rem,
+      ((var(--fluid-min) / 16) * 1rem) -
+        (((var(--fluid-preferred) * var(--font-width-min)) / 16) * 1rem) +
+        (var(--fluid-preferred) * var(--variable-unit, 100vi)),
+      (var(--fluid-max) / 16) * 1rem
+    );
+    font-size: var(--fluid-type);
+  }
+
+  *,
+  *:after,
+  *:before {
+    box-sizing: border-box;
+  }
+
+  body::before {
+    --size: 45px;
+    --line: color-mix(in lch, canvasText, transparent 70%);
+    content: '';
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    background: linear-gradient(
+          90deg,
+          var(--line) 1px,
+          transparent 1px var(--size)
+        )
+        50% 50% / var(--size) var(--size),
+      linear-gradient(var(--line) 1px, transparent 1px var(--size)) 50% 50% /
+        var(--size) var(--size);
+    mask: linear-gradient(-20deg, transparent 50%, white);
+    top: 0;
+    transform-style: flat;
+    pointer-events: none;
+    z-index: -1;
+  }
 }
