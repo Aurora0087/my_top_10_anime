@@ -1,4 +1,4 @@
-'use client'
+/*'use client'
 
 import { motion } from "motion/react";
 import React from "react";
@@ -13,7 +13,7 @@ interface Card {
 
 interface RowProps {
   cards: Card[];
-  setCards: Function;
+  setCards: (cards:Card[])=>void;
 }
 
 interface DropIndicatorProps {
@@ -28,8 +28,6 @@ function DragDropFlex({ cards, setCards }: RowProps) {
 
 function Row({ cards, setCards }: RowProps) {
 
-  const [active, setActive] = useState(false);
-
 
   // pc drag
   function handleDragStart(e: DragEvent<HTMLDivElement>, cardId: string) {
@@ -39,7 +37,6 @@ function Row({ cards, setCards }: RowProps) {
   function handleDragEnd(e: DragEvent<HTMLDivElement>) {
 
     const cardId = e.dataTransfer.getData("cardId");
-    setActive(false);
     clearHighlights();
 
     const indicators = getIndicators();
@@ -72,7 +69,6 @@ function Row({ cards, setCards }: RowProps) {
   function handleDragOver(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
     highlightIndicator(e);
-    setActive(true);
 
     const container = e.currentTarget as HTMLElement;
     const rect = container.getBoundingClientRect();
@@ -98,7 +94,6 @@ function Row({ cards, setCards }: RowProps) {
 
   function handleDragLeave() {
     clearHighlights();
-    setActive(false);
   }
 
   function getIndicators() {
@@ -137,7 +132,7 @@ function Row({ cards, setCards }: RowProps) {
 
 
   // mobile touchDrag
-  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>, cardId: string) {
+  function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
     // Store the dragged card ID in a state or a global variable
     e.currentTarget.dataset.dragging = "true";
   }
@@ -182,7 +177,7 @@ function Row({ cards, setCards }: RowProps) {
             draggable="true"
             onDragStart={(e) => handleDragStart(e as any, String(card.id))}
 
-            onTouchStart={(e) => handleTouchStart(e, String(card.id))}
+            onTouchStart={(e) => handleTouchStart(e)}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             className="cursor-grab rounded-xl overflow-hidden h-[42vh] w-[30vh] bg-neutral-800 active:cursor-grabbing flex-grow"
@@ -207,4 +202,4 @@ function DropIndicator({ beforeId }: DropIndicatorProps) {
 
 }
 
-export default DragDropFlex
+export default DragDropFlex*/

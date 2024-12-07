@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef, useCallback, ChangeEvent } from 'react'
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence, MotionValue } from 'framer-motion'
 import Image from 'next/image'
 import SwapyDragDrop from '@/components/SwapyDragDrop'
 import PerspectiveText from '@/components/PerspectiveText'
@@ -176,127 +176,9 @@ export default function Component() {
       <SerchAnime addTolist={clickOnBox} selectedList={selectedList} />
 
       <div className="p-4 mx-[0] grid grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-8">
-        {columns.map((column, columnIndex) => {
-          const columnY = useTransform(scrollYProgress, [0, 1], [0, -250 * ((columnIndex + 1) % 2)])
-          return (
-            <motion.div
-              key={columnIndex}
-              className={`flex-1 transition-all ${columnIndex === 0 || columnIndex === 4 ? ' hidden md:block' : ' visible'}`}
-              style={{ y: columnY }}
-            >
-              {column.map((anime: Anime) => {
-
-                const index = selectedList.findIndex((list) => anime.id === list.id);
-                return (
-                  <motion.div
-                    initial={{
-                      rotateY: 180,
-                    }}
-                    animate={{
-                      rotateY: 0,
-                    }}
-                    key={anime.id}
-                    style={{
-                      x: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 0 : 1000 * (columnIndex < 2 ? -1 : 1)),
-                      rotate: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 8 * (columnIndex < 2 ? -1 : 1) : 0)
-                    }}
-                    whileHover={{
-                      rotate: columnIndex < 2 ? -1 : 1,
-                    }}
-                    transition={{
-                      ease: 'easeInOut',
-                      duration: .5,
-                    }}
-                    className={`mb-4 transition bg-[#2600fe] rounded-xl relative aspect-[1/1.6] ${selectedList.length === 10 && index === -1 ? ' opacity-50 pointer-events-none' : 'cursor-pointer'}`}
-                    onClick={() => clickOnBox(anime.id, anime.coverImage.large)}
-                  >
-
-
-                    { // adding to list animation
-                      clikedAnime !== -1 && clikedAnime === anime.id && <motion.div
-                        initial={{
-                          x: 0,
-                          y: 0,
-                          width: '100%',
-                          opacity: 1,
-                        }}
-                        animate={{
-                          x: (columnIndex === 0 || columnIndex === 4 ? 600 : (columnIndex === 1 || columnIndex === 3 ? 200 : 0)) * (columnIndex < 2 ? 1 : -1),
-                          y: 1000,
-                          width: '2.75rem',
-                          rotate: 4 * (columnIndex < 2 ? 1 : -1),
-                          opacity: 0
-                        }}
-                        transition={{
-                          ease: 'easeInOut',
-                          delay: .5,
-                          duration: .4
-                        }}
-                        className=' absolute transition-all overflow-hidden shadow-lg rounded-xl w-11 lg:w-14 aspect-[1/1.6]'>
-                        <img
-                          src={anime.coverImage.large}
-                          alt={`Anime cover ${anime.id}`}
-                          className={`w-full h-full object-cover`}
-                          loading="lazy"
-                        />
-                      </motion.div>}
-
-                    {
-                      index !== -1 &&
-                      <motion.div
-                        initial={{
-                          opacity: 0,
-                          y: -10,
-                          scale: 0,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                          scale: 1,
-                        }}
-                        transition={{
-                          ease: 'easeIn',
-                          delay: .5,
-                          duration: .4,
-                        }}
-                        className={`transition text-[#0061fe] w-12 h-16 text-5xl px-1 py-2 absolute ${columnIndex < 2 ? 'rounded-bl-xl rounded-tr-xl right-0' : 'rounded-tl-xl rounded-br-xl left-0'} bg-[#fff429] z-50 grid place-content-center tracking-tighter`}
-                      >
-                        {index + 1}
-                      </motion.div>
-                    }
-
-
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                      }}
-                      animate={{
-                        opacity: 1,
-                      }}
-                      style={{
-                        x: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 110 * (columnIndex < 2 ? 1 : -1) : 0),
-                        y: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 10 : 0),
-                        rotate: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 8 * (columnIndex < 2 ? -1 : 1) : 0)
-                      }}
-                      transition={{
-                        ease: 'easeInOut',
-                        delay: .5,
-                      }}
-                      className={`h-full w-full transition overflow-hidden rounded-xl relative border-4 border-[#0061fe] z-20 ${index !== -1 && 'border-[#fff429]'}`}>
-                      <img
-                        src={anime.coverImage.large}
-                        alt={`Anime cover ${anime.id}`}
-                        className={`w-full h-full object-cover transition hover:scale-105`}
-                        loading="lazy"
-                      />
-                    </motion.div>
-
-                  </motion.div>
-                )
-              })}
-            </motion.div>
-          )
-        })}
+        {columns.map((column, columnIndex) => (
+          <AnimeCols key={columnIndex} clickOnBox={clickOnBox} column={column} columnIndex={columnIndex} selectedList={selectedList} scrollYProgress={scrollYProgress} clikedAnime={clikedAnime}/>
+        ))}
       </div>
       <div ref={loader} className="h-[10vh] w-screen grid place-content-center text-[#fff429] capitalize" >
         Searching for Your top animes...
@@ -321,10 +203,148 @@ export default function Component() {
   )
 }
 
+function AnimeCols({
+  column,
+  columnIndex, 
+  selectedList,
+  scrollYProgress,
+  clikedAnime,
+  clickOnBox
+}:{
+  column: Anime[], 
+  columnIndex:number,
+  selectedList: Anime[],
+  scrollYProgress: MotionValue<number>,
+  clikedAnime:number,
+  clickOnBox:(id:number,img:string)=>void
+}) {
+
+  const columnY = useTransform(scrollYProgress, [0, 1], [0, -250 * ((columnIndex + 1) % 2)]);
+
+  return (
+    <motion.div
+      key={columnIndex}
+      className={`flex-1 transition-all ${columnIndex === 0 || columnIndex === 4 ? ' hidden md:block' : ' visible'}`}
+      style={{ y: columnY }}
+    >
+      {column.map((anime: Anime) => {
+
+        const index = selectedList.findIndex((list) => anime.id === list.id);
+        return (
+          <motion.div
+            initial={{
+              rotateY: 180,
+            }}
+            animate={{
+              rotateY: 0,
+            }}
+            key={anime.id}
+            style={{
+              x: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 0 : 1000 * (columnIndex < 2 ? -1 : 1)),
+              rotate: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 8 * (columnIndex < 2 ? -1 : 1) : 0)
+            }}
+            whileHover={{
+              rotate: columnIndex < 2 ? -1 : 1,
+            }}
+            transition={{
+              ease: 'easeInOut',
+              duration: .5,
+            }}
+            className={`mb-4 transition bg-[#2600fe] rounded-xl relative aspect-[1/1.6] ${selectedList.length === 10 && index === -1 ? ' opacity-50 pointer-events-none' : 'cursor-pointer'}`}
+            onClick={() => clickOnBox(anime.id, anime.coverImage.large)}
+          >
+
+
+            { // adding to list animation
+              clikedAnime !== -1 && clikedAnime === anime.id && <motion.div
+                initial={{
+                  x: 0,
+                  y: 0,
+                  width: '100%',
+                  opacity: 1,
+                }}
+                animate={{
+                  x: (columnIndex === 0 || columnIndex === 4 ? 600 : (columnIndex === 1 || columnIndex === 3 ? 200 : 0)) * (columnIndex < 2 ? 1 : -1),
+                  y: 1000,
+                  width: '2.75rem',
+                  rotate: 4 * (columnIndex < 2 ? 1 : -1),
+                  opacity: 0
+                }}
+                transition={{
+                  ease: 'easeInOut',
+                  delay: .5,
+                  duration: .4
+                }}
+                className=' absolute transition-all overflow-hidden shadow-lg rounded-xl w-11 lg:w-14 aspect-[1/1.6]'>
+                <img
+                  src={anime.coverImage.large}
+                  alt={`Anime cover ${anime.id}`}
+                  className={`w-full h-full object-cover`}
+                  loading="lazy"
+                />
+              </motion.div>}
+
+            {
+              index !== -1 &&
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  y: -10,
+                  scale: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                }}
+                transition={{
+                  ease: 'easeIn',
+                  delay: .5,
+                  duration: .4,
+                }}
+                className={`transition text-[#0061fe] w-12 h-16 text-5xl px-1 py-2 absolute ${columnIndex < 2 ? 'rounded-bl-xl rounded-tr-xl right-0' : 'rounded-tl-xl rounded-br-xl left-0'} bg-[#fff429] z-50 grid place-content-center tracking-tighter`}
+              >
+                {index + 1}
+              </motion.div>
+            }
+
+
+            <motion.div
+              initial={{
+                opacity: 0,
+              }}
+              animate={{
+                opacity: 1,
+              }}
+              style={{
+                x: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 110 * (columnIndex < 2 ? 1 : -1) : 0),
+                y: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 10 : 0),
+                rotate: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 8 * (columnIndex < 2 ? -1 : 1) : 0)
+              }}
+              transition={{
+                ease: 'easeInOut',
+                delay: .5,
+              }}
+              className={`h-full w-full transition overflow-hidden rounded-xl relative border-4 border-[#0061fe] z-20 ${index !== -1 && 'border-[#fff429]'}`}>
+              <img
+                src={anime.coverImage.large}
+                alt={`Anime cover ${anime.id}`}
+                className={`w-full h-full object-cover transition hover:scale-105`}
+                loading="lazy"
+              />
+            </motion.div>
+
+          </motion.div>
+        )
+      })}
+    </motion.div>
+  )
+}
+
 
 /* selected anime list */
 
-function SelectedList({ list, setList }: { list: Anime[], setList: Function }) {
+function SelectedList({ list, setList }: { list: Anime[], setList: (animes:Anime[])=>void }) {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -507,7 +527,7 @@ function SelectedList({ list, setList }: { list: Anime[], setList: Function }) {
 /* serch Anime */
 
 interface SerchAnimeProps {
-  addTolist: Function;
+  addTolist: (id:number,img:string)=>void;
   selectedList: Anime[];
 }
 
@@ -547,7 +567,7 @@ function SerchAnime({ addTolist, selectedList }: SerchAnimeProps) {
         
 
         const results: Anime[] = res.data.Page.media.map(
-          (media: any) => ({
+          (media: {id:number,coverImage:{large:string}}) => ({
             id: media.id,
             coverImage: media.coverImage,
           })

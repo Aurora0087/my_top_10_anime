@@ -14,7 +14,7 @@ interface Card {
 
 interface RowProps {
     cards: Card[];
-    setCards: Function;
+    setCards: (cards: Card[])=>void;
 }
 
 function SwapyDragDrop({ cards, setCards }: RowProps) {
@@ -52,6 +52,7 @@ function Row({ cards, setCards }: RowProps) {
 
             // Update the cards state
             setCards(newCards);
+            setSwapCard(swapCard)
         });
 
         if (cards.length === 10) {

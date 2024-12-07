@@ -72,7 +72,7 @@ function CanvasImage({ bg = '#a6120d', txtCol = '#fff429', images = [] }: { bg?:
         ctx.restore();
 
         // Draw images and numbers
-        positions.forEach((pos, i) => {
+        positions.forEach((pos) => {
             // Draw number
             ctx.font = `280px ${netflixSan.style.fontFamily}`;
             ctx.fillStyle = txtCol;
