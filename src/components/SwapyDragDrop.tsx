@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import React, { useEffect, useRef, useState } from "react";
 import { createSwapy } from "swapy";
+import PerspectiveText from "./PerspectiveText";
 
 interface Card {
     id: number;
@@ -140,7 +141,7 @@ function Row({ cards, setCards }: RowProps) {
                             duration: 2,
                         }}
                         href={`/validate?${validateUrl}`} className=" transition bg-[#2600fe] text-xl md:text-2xl text-nowrap rounded-full py-2 px-8">
-                        To validate
+                        <PerspectiveText label={"continue"} />
                     </motion.a>
                 }
                 <div

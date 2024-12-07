@@ -1,5 +1,6 @@
 'use client'
 import PageAnimation1 from "@/components/PageAnimation1";
+import PerspectiveText from "@/components/PerspectiveText";
 import axios from "axios";
 import { motion } from "framer-motion";
 import localFont from "next/font/local";
@@ -68,7 +69,7 @@ function page() {
                     style={{
                         transform: "translate(-50%, -50%)",
                     }}
-                    className=" w-20 h-20 absolute rounded-full border-2 border-black z-50">
+                    className=" w-20 h-20 absolute rounded-full z-50">
 
                 </motion.div>
 
@@ -90,7 +91,7 @@ function page() {
                     style={{
                         transform: "translate(-50%, -50%)",
                     }}
-                    className="w-20 h-20 absolute rounded-full cursor-pointer overflow-hidden z-50 bg-[#fff429]">
+                    className="w-20 h-20 absolute rounded-full cursor-pointer overflow-hidden z-50 bg-[#fff429] opacity-90 hover:opacity-100">
                     <img src='/back.svg' alt="" className="w-full h-full object-fill" />
                 </motion.a>
 
@@ -274,8 +275,8 @@ function TopImages({ imags, show }: { imags: string[], show: boolean }) {
             ctx.font = `50px ${netflixSan.style.fontFamily}`;
             ctx.fillStyle = d.botTxtCol;
             ctx.textAlign = "center";
-            ctx.letterSpacing = "1rem";
-            ctx.fillText("EXAMPLE.COM", canvasWidth / 2, canvasHeight - 50);
+            ctx.letterSpacing = "0.5rem";
+            ctx.fillText("MY TOP 10 ANIME", canvasWidth / 2, canvasHeight - 50);
         });
     }, []);
 
@@ -356,7 +357,9 @@ function TopImages({ imags, show }: { imags: string[], show: boolean }) {
                     ))}
                 </div>
             </div>
-            <a href={downloadImgUrl} download="mytop10.png" className="bg-[#fe00b0] w-fit rounded-full px-8 py-3 font-extrabold overflow-hidden relative text-xl md:text-2xl text-nowrap text-center mt-6 pointer-events-auto cursor-pointer">Download</a>
+            <a href={downloadImgUrl} download="mytop10.png" className="bg-[#fe00b0] w-fit rounded-full px-8 py-3 font-extrabold overflow-hidden relative text-xl md:text-2xl text-nowrap text-center mt-6 pointer-events-auto cursor-pointer">
+                <PerspectiveText label={"Download"} />
+            </a>
         </motion.div>
     )
 }
@@ -367,7 +370,7 @@ function TopVideos({ imags, show }: { imags: string[], show: boolean }) {
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
 
-    useEffect(()=>{
+    useEffect(() => {
         const fetchVideo = async () => {
             try {
                 // Construct the query string
@@ -395,7 +398,7 @@ function TopVideos({ imags, show }: { imags: string[], show: boolean }) {
 
         fetchVideo();
 
-    },[])
+    }, [])
 
     return (
         <motion.div
@@ -411,107 +414,107 @@ function TopVideos({ imags, show }: { imags: string[], show: boolean }) {
             <div className=" rounded-xl overflow-hidden bg-[#fff429] aspect-[9/16] w-[28.125vh] h-[50vh] relative grid place-content-center">
                 {isLoading ? (
                     <div className="w-20 h-20">
-                    <svg viewBox="0 0 24 24">
-                        <defs>
-                            <filter id="light" y="-50%" x="-50%" width="200%" height="200%">
-                                <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
-                                <feColorMatrix type="saturate" values="4" />
-                                <feComposite in="SourceGraphic" operator="over" />
-                            </filter>
-                            <radialGradient
-                                id="a"
-                                cx="0"
-                                cy="24"
-                                r="24"
-                                gradientUnits="userSpaceOnUse"
-                            >
-                                <stop offset="0" stop-color="#ff8000" />
-                                <stop offset="1" stop-color="#ff8000" stop-opacity="0" />
-                            </radialGradient>
-                            <radialGradient
-                                id="b"
-                                cx="24"
-                                cy="24"
-                                r="24"
-                                gradientUnits="userSpaceOnUse"
-                            >
-                                <stop offset="0" stop-color="#00ff19" />
-                                <stop offset="1" stop-color="#00ff19" stop-opacity="0" />
-                            </radialGradient>
-                            <radialGradient
-                                id="c"
-                                cx="12"
-                                cy="0"
-                                r="12"
-                                gradientUnits="userSpaceOnUse"
-                            >
-                                <stop offset="0" stop-color="#9900ff" />
-                                <stop offset="1" stop-color="#9900ff" stop-opacity="0" />
-                            </radialGradient>
-                            <radialGradient
-                                id="d"
+                        <svg viewBox="0 0 24 24">
+                            <defs>
+                                <filter id="light" y="-50%" x="-50%" width="200%" height="200%">
+                                    <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+                                    <feColorMatrix type="saturate" values="4" />
+                                    <feComposite in="SourceGraphic" operator="over" />
+                                </filter>
+                                <radialGradient
+                                    id="a"
+                                    cx="0"
+                                    cy="24"
+                                    r="24"
+                                    gradientUnits="userSpaceOnUse"
+                                >
+                                    <stop offset="0" stop-color="#ff8000" />
+                                    <stop offset="1" stop-color="#ff8000" stop-opacity="0" />
+                                </radialGradient>
+                                <radialGradient
+                                    id="b"
+                                    cx="24"
+                                    cy="24"
+                                    r="24"
+                                    gradientUnits="userSpaceOnUse"
+                                >
+                                    <stop offset="0" stop-color="#00ff19" />
+                                    <stop offset="1" stop-color="#00ff19" stop-opacity="0" />
+                                </radialGradient>
+                                <radialGradient
+                                    id="c"
+                                    cx="12"
+                                    cy="0"
+                                    r="12"
+                                    gradientUnits="userSpaceOnUse"
+                                >
+                                    <stop offset="0" stop-color="#9900ff" />
+                                    <stop offset="1" stop-color="#9900ff" stop-opacity="0" />
+                                </radialGradient>
+                                <radialGradient
+                                    id="d"
+                                    cx="12"
+                                    cy="12"
+                                    r="12"
+                                    gradientUnits="userSpaceOnUse"
+                                >
+                                    <stop offset="0" stop-color="#ffff00" />
+                                    <stop offset="1" stop-color="#ffff00" stop-opacity="0" />
+                                </radialGradient>
+                                <radialGradient
+                                    id="e"
+                                    cx="0"
+                                    cy="0"
+                                    r="24"
+                                    gradientUnits="userSpaceOnUse"
+                                >
+                                    <stop offset="0" stop-color="#FF0000" />
+                                    <stop offset="1" stop-color="#FF0000" stop-opacity="0" />
+                                </radialGradient>
+                                <radialGradient
+                                    id="f"
+                                    cx="24"
+                                    cy="0"
+                                    r="20"
+                                    gradientUnits="userSpaceOnUse"
+                                >
+                                    <stop offset="0" stop-color="#0CF" />
+                                    <stop offset="1" stop-color="#0CF" stop-opacity="0" />
+                                </radialGradient>
+
+                                <mask id="circle">
+                                    <g>
+                                        <circle
+                                            r="8"
+                                            cx="12"
+                                            cy="12"
+                                            fill="none"
+                                            stroke-width="4"
+                                            stroke="white"
+                                            pathLength="1.025"
+                                        ></circle>
+                                    </g>
+                                </mask>
+                            </defs>
+                            <circle
+                                r="8"
                                 cx="12"
                                 cy="12"
-                                r="12"
-                                gradientUnits="userSpaceOnUse"
-                            >
-                                <stop offset="0" stop-color="#ffff00" />
-                                <stop offset="1" stop-color="#ffff00" stop-opacity="0" />
-                            </radialGradient>
-                            <radialGradient
-                                id="e"
-                                cx="0"
-                                cy="0"
-                                r="24"
-                                gradientUnits="userSpaceOnUse"
-                            >
-                                <stop offset="0" stop-color="#FF0000" />
-                                <stop offset="1" stop-color="#FF0000" stop-opacity="0" />
-                            </radialGradient>
-                            <radialGradient
-                                id="f"
-                                cx="24"
-                                cy="0"
-                                r="20"
-                                gradientUnits="userSpaceOnUse"
-                            >
-                                <stop offset="0" stop-color="#0CF" />
-                                <stop offset="1" stop-color="#0CF" stop-opacity="0" />
-                            </radialGradient>
-
-                            <mask id="circle">
-                                <g>
-                                    <circle
-                                        r="8"
-                                        cx="12"
-                                        cy="12"
-                                        fill="none"
-                                        stroke-width="4"
-                                        stroke="white"
-                                        pathLength="1.025"
-                                    ></circle>
+                                fill="none"
+                                stroke-width="4"
+                                stroke="hsl(0 0% 100% / 0.25)"
+                            ></circle>
+                            <g>
+                                <g mask="url(#circle)">
+                                    <rect fill="url(#a)" width="24" height="24" />
+                                    <rect fill="url(#b)" width="24" height="24" />
+                                    <rect fill="url(#c)" width="24" height="24" />
+                                    <rect fill="url(#d)" width="24" height="24" />
+                                    <rect fill="url(#e)" width="24" height="24" />
+                                    <rect fill="url(#f)" width="24" height="24" />
                                 </g>
-                            </mask>
-                        </defs>
-                        <circle
-                            r="8"
-                            cx="12"
-                            cy="12"
-                            fill="none"
-                            stroke-width="4"
-                            stroke="hsl(0 0% 100% / 0.25)"
-                        ></circle>
-                        <g>
-                            <g mask="url(#circle)">
-                                <rect fill="url(#a)" width="24" height="24" />
-                                <rect fill="url(#b)" width="24" height="24" />
-                                <rect fill="url(#c)" width="24" height="24" />
-                                <rect fill="url(#d)" width="24" height="24" />
-                                <rect fill="url(#e)" width="24" height="24" />
-                                <rect fill="url(#f)" width="24" height="24" />
                             </g>
-                        </g>
-                    </svg>
+                        </svg>
                     </div>
 
                 ) : (
@@ -520,16 +523,16 @@ function TopVideos({ imags, show }: { imags: string[], show: boolean }) {
 
             </div>
             {
-                isLoading?(
+                isLoading ? (
                     <span className="bg-[#fff429] text-[#2600fe] w-fit rounded-full px-8 py-3 font-extrabold overflow-hidden relative text-xl md:text-2xl text-nowrap text-center mt-6">Making your video...</span>
-                ):(
-                    errorMessage === ''?
-                    (<a href={videoUrl} download="mytop10.mp4" className="bg-[#fff429] text-[#2600fe] w-fit rounded-full px-8 py-3 font-extrabold overflow-hidden relative text-xl md:text-2xl text-nowrap text-center mt-6 pointer-events-auto cursor-pointer">Download</a>)
-                    :
-                    (<span className="bg-[#fff429] text-[#fe00b0] w-fit rounded-full px-8 py-3 font-extrabold overflow-hidden relative text-xl md:text-2xl text-nowrap text-center mt-6">{errorMessage}</span>)
+                ) : (
+                    errorMessage === '' ?
+                        (<a href={videoUrl} download="mytop10.mp4" className="bg-[#fff429] text-[#2600fe] w-fit rounded-full px-8 py-3 font-extrabold overflow-hidden relative text-xl md:text-2xl text-nowrap text-center mt-6 pointer-events-auto cursor-pointer">Download</a>)
+                        :
+                        (<span className="bg-[#fff429] text-[#fe00b0] w-fit rounded-full px-8 py-3 font-extrabold overflow-hidden relative text-xl md:text-2xl text-nowrap text-center mt-6">{errorMessage}</span>)
                 )
             }
-           </motion.div>
+        </motion.div>
     )
 }
 

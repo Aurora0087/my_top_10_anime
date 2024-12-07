@@ -11,8 +11,8 @@ function LenisScroll({
     <ReactLenis
       root
       options={{
-        lerp: 0.01,
-        duration: 1.01,
+        lerp: 0.02,
+        duration: 1.5,
         smoothWheel:true,
         touchMultiplier:2,
         autoResize:true,

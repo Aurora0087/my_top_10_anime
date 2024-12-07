@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useEffect, useState, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useRef, useCallback, ChangeEvent } from 'react'
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 import SwapyDragDrop from '@/components/SwapyDragDrop'
+import PerspectiveText from '@/components/PerspectiveText'
 
 interface Anime {
   id: number
@@ -16,7 +17,7 @@ interface Anime {
 const client = new ApolloClient({
   uri: 'https://graphql.anilist.co',
   cache: new InMemoryCache(),
-})
+});
 
 const query = gql`
   query ($page: Int) {
@@ -29,7 +30,7 @@ const query = gql`
       }
     }
   }
-`
+`;
 
 export default function Component() {
 
@@ -47,27 +48,27 @@ export default function Component() {
 
   const fetchAnime = useCallback(async () => {
     if (loading) return;
-  
+
     setLoading(true);
-  
+
     try {
       const { data } = await client.query({
         query,
         variables: { page },
       });
-  
+
       setAnimeList((prev) => {
         // Create a Set of existing anime IDs to check for duplicates
         const existingIds = new Set(prev.map((anime) => anime.id));
-  
+
         // Filter out any media that is already in the list
         const newAnime = data.Page.media.filter(
-          (anime:Anime) => !existingIds.has(anime.id)
+          (anime: Anime) => !existingIds.has(anime.id)
         );
-  
+
         return [...prev, ...newAnime];
       });
-  
+
       setPage((prev) => prev + 1);
     } catch (error) {
       console.error("Error fetching anime:", error);
@@ -75,7 +76,7 @@ export default function Component() {
       setLoading(false);
     }
   }, [page, loading]);
-  
+
 
 
 
@@ -114,7 +115,7 @@ export default function Component() {
     columns[index % 5].push(anime)
   })
 
-  const {scrollYProgress } = useScroll();
+  const { scrollYProgress } = useScroll();
 
   // on click on img box
 
@@ -171,6 +172,9 @@ export default function Component() {
 
   return (
     <div ref={containerRef} className={`no-scrollbar relative min-h-screen max-w-screen ${clikedAnime !== -1 ? 'overflow-hidden' : ' overflow-y-scroll'} bg-[#0061fe]`}>
+
+      <SerchAnime addTolist={clickOnBox} selectedList={selectedList} />
+
       <div className="p-4 mx-[0] grid grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-8">
         {columns.map((column, columnIndex) => {
           const columnY = useTransform(scrollYProgress, [0, 1], [0, -250 * ((columnIndex + 1) % 2)])
@@ -197,13 +201,13 @@ export default function Component() {
                       rotate: clikedAnime === -1 ? 0 : (clikedAnime === anime.id ? 8 * (columnIndex < 2 ? -1 : 1) : 0)
                     }}
                     whileHover={{
-                      rotate: clikedAnime !== -1 ? 0 : 2 * (columnIndex < 2 ? -1 : 1),
+                      rotate: columnIndex < 2 ? -1 : 1,
                     }}
                     transition={{
                       ease: 'easeInOut',
                       duration: .5,
                     }}
-                    className={`mb-4 lg:mb-8 transition bg-[#2600fe] rounded-xl relative ${selectedList.length === 10 && index === -1 ? ' opacity-50 pointer-events-none' : 'cursor-pointer'}`}
+                    className={`mb-4 transition bg-[#2600fe] rounded-xl relative aspect-[1/1.6] ${selectedList.length === 10 && index === -1 ? ' opacity-50 pointer-events-none' : 'cursor-pointer'}`}
                     onClick={() => clickOnBox(anime.id, anime.coverImage.large)}
                   >
 
@@ -214,21 +218,21 @@ export default function Component() {
                           x: 0,
                           y: 0,
                           width: '100%',
-                          opacity:1,
+                          opacity: 1,
                         }}
                         animate={{
                           x: (columnIndex === 0 || columnIndex === 4 ? 600 : (columnIndex === 1 || columnIndex === 3 ? 200 : 0)) * (columnIndex < 2 ? 1 : -1),
                           y: 1000,
                           width: '2.75rem',
                           rotate: 4 * (columnIndex < 2 ? 1 : -1),
-                          opacity:0
+                          opacity: 0
                         }}
                         transition={{
                           ease: 'easeInOut',
                           delay: .5,
                           duration: .4
                         }}
-                        className=' absolute transition-all overflow-hidden shadow-lg rounded-xl w-11 lg:w-14 aspect-[5/7]'>
+                        className=' absolute transition-all overflow-hidden shadow-lg rounded-xl w-11 lg:w-14 aspect-[1/1.6]'>
                         <img
                           src={anime.coverImage.large}
                           alt={`Anime cover ${anime.id}`}
@@ -255,9 +259,9 @@ export default function Component() {
                           delay: .5,
                           duration: .4,
                         }}
-                        className={`transition text-[#0061fe] w-12 h-16 text-5xl px-1 py-2 absolute ${columnIndex<2 ? 'rounded-bl-xl rounded-tr-xl right-0' : 'rounded-tl-xl rounded-br-xl left-0'} bg-[#fff429] z-50 grid place-content-center tracking-tighter`}
+                        className={`transition text-[#0061fe] w-12 h-16 text-5xl px-1 py-2 absolute ${columnIndex < 2 ? 'rounded-bl-xl rounded-tr-xl right-0' : 'rounded-tl-xl rounded-br-xl left-0'} bg-[#fff429] z-50 grid place-content-center tracking-tighter`}
                       >
-                        {index+1}
+                        {index + 1}
                       </motion.div>
                     }
 
@@ -278,7 +282,7 @@ export default function Component() {
                         ease: 'easeInOut',
                         delay: .5,
                       }}
-                      className={`'h-full w-full transition overflow-hidden rounded-xl relative border-4 border-[#0061fe] z-20 ${index !== -1 && 'border-[#fff429]'}`}>
+                      className={`h-full w-full transition overflow-hidden rounded-xl relative border-4 border-[#0061fe] z-20 ${index !== -1 && 'border-[#fff429]'}`}>
                       <img
                         src={anime.coverImage.large}
                         alt={`Anime cover ${anime.id}`}
@@ -320,7 +324,7 @@ export default function Component() {
 
 /* selected anime list */
 
-function SelectedList({ list,setList }: { list: Anime[],setList:Function }) {
+function SelectedList({ list, setList }: { list: Anime[], setList: Function }) {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -387,7 +391,7 @@ function SelectedList({ list,setList }: { list: Anime[],setList:Function }) {
             }}
             onClick={open}
             className='text-[#fff429] transition rounded-full bg-[#2600fe] px-8 py-2 mt-2 cursor-pointer'>
-            continue
+            <PerspectiveText label={"next"} />
           </motion.div>}
 
         {
@@ -418,27 +422,27 @@ function SelectedList({ list,setList }: { list: Anime[],setList:Function }) {
           </motion.button>}
         {
           // change itmes place, delete from list, direct to next route
-          isExpanded && list.length>0 &&
+          isExpanded && list.length > 0 &&
           <motion.div
-          initial={{
-            y:1000,
-            opacity:0,
-          }}
-          animate={{
-            y:0,
-            opacity:1
-          }}
-          transition={{
-            ease: 'easeInOut',
-            duration: .5,
-          }}
+            initial={{
+              y: 1000,
+              opacity: 0,
+            }}
+            animate={{
+              y: 0,
+              opacity: 1
+            }}
+            transition={{
+              ease: 'easeInOut',
+              duration: .5,
+            }}
 
-          className=' w-full transition-all h-fit absolute top-[20vw] md:top-[12vw] left-0'
+            className=' w-full transition-all h-fit absolute top-[20vw] md:top-[12vw] left-0'
           >
             <div className=' relative w-full h-fit'>
-              <SwapyDragDrop cards={list} setCards={setList}/>
+              <SwapyDragDrop cards={list} setCards={setList} />
             </div>
-            
+
           </motion.div>
         }
         <motion.div
@@ -479,7 +483,7 @@ function SelectedList({ list,setList }: { list: Anime[],setList:Function }) {
                       className=' relative w-full h-full'
                     >
                       <div className='bg-[#2600fe] text-white px-1 absolute top-0 right-0 rounded-bl-lg tracking-tighter text-xs lg:text-base'>
-                        {i+1}
+                        {i + 1}
                       </div>
                       <img
                         src={anime.coverImage.large}
@@ -497,4 +501,185 @@ function SelectedList({ list,setList }: { list: Anime[],setList:Function }) {
       </motion.div>
     </motion.div>
   )
+}
+
+
+/* serch Anime */
+
+interface SerchAnimeProps {
+  addTolist: Function;
+  selectedList: Anime[];
+}
+
+function SerchAnime({ addTolist, selectedList }: SerchAnimeProps) {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [searchText, setSearchText] = useState<string>("");
+  const [serchedAnimeList, setSerchedAnimeList] = useState<Anime[]>([]);
+
+  // Toggle search bar expansion and handle button clicks
+  async function serchButtonHandeler(): Promise<void> {
+    if (!isExpanded) {
+      setIsExpanded(true);
+    } else if (isExpanded && searchText.length < 1) {
+      setIsExpanded(false);
+      setSerchedAnimeList([])
+    } else {
+      // Search anime by title in AniList
+      try {
+        const res = await client.query({
+          query: gql`
+            query ($search: String) {
+              Page(page: 1, perPage: 5) {
+                media(search: $search, type: ANIME) {
+                  id
+                  coverImage {
+                    large
+                  }
+                }
+              }
+            }
+          `,
+          variables: {
+            search: searchText,
+          },
+        });
+        console.log(res);
+        
+
+        const results: Anime[] = res.data.Page.media.map(
+          (media: any) => ({
+            id: media.id,
+            coverImage: media.coverImage,
+          })
+        );
+
+        setSerchedAnimeList(results);
+      } catch (error) {
+        console.error("Failed to fetch anime:", error);
+      }
+    }
+  }
+
+  // Handle input text changes
+  function onInputChanger(event: ChangeEvent<HTMLInputElement>): void {
+    setSearchText(event.target.value);
+  }
+
+  return (
+    <motion.div className="fixed flex-col top-4 w-full flex justify-center items-center z-[999999999999999999] pointer-events-none">
+      <div className="bg-[#0061fe] w-fit flex rounded-full pointer-events-auto">
+        {/* Search input */}
+        <AnimatePresence>
+          {isExpanded && (
+            <motion.input
+              value={searchText}
+              onChange={onInputChanger}
+              animate={{
+                width: ["0vw", "25vw"],
+                opacity: [0, 1],
+              }}
+              exit={{
+                width: 0,
+                opacity: 0,
+              }}
+              transition={{ duration: 0.3 }}
+              className="rounded-l-full bg-[#0061fe] text-[#fff429] pl-2 border-y border-l border-[#fff429] outline-none"
+              placeholder="Search anime..."
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Clear text button */}
+        <AnimatePresence>
+          {searchText.length > 0 && (
+            <motion.div
+              onClick={() => {setSearchText(""); setSerchedAnimeList([])}}
+              animate={{
+                scale: [0, 1],
+                rotate: [0, 45],
+              }}
+              exit={{
+                scale: 0,
+                opacity: 0,
+                rotate: 0,
+                width: 0,
+              }}
+              whileHover={{
+                rotate: 135,
+              }}
+              transition={{ duration: 0.2 }}
+              className="transition w-12 h-12 overflow-hidden rounded-full cursor-pointer flex items-center justify-center"
+            >
+              <img src="/x2.svg" alt="Clear" className="w-6 h-6 object-cover" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Search button */}
+        <motion.button
+          whileTap={{
+            scale: 0.8,
+          }}
+          onClick={serchButtonHandeler}
+          className="w-12 h-12 rounded-full bg-[#fff429] grid place-content-center overflow-hidden cursor-pointer"
+        >
+          <img src="/search.svg" alt="Search" className="w-6 h-6 object-cover" />
+        </motion.button>
+      </div>
+
+      {/* Display searched anime list */}
+      <AnimatePresence>
+        {serchedAnimeList.length > 0 && isExpanded && (
+          <motion.div
+            animate={{
+              height: [0, "auto"],
+            }}
+            exit={{
+              height: 0,
+              opacity: 0,
+            }}
+            transition={{ duration: 0.3 }}
+            className="w-full p-4 m-4 rounded-xl bg-[#fff429] h-fit grid gap-8 place-content-center grid-cols-3 md:grid-cols-5 pointer-events-auto"
+          >
+            {serchedAnimeList.map((anime) => {
+              const index = selectedList.findIndex(
+                (list) => anime.id === list.id
+              );
+
+              return (
+                <motion.div
+                  key={anime.id}
+                  initial={{
+                    opacity: 0,
+                  }}
+                  animate={{
+                    opacity: 1,
+                  }}
+                  transition={{
+                    ease: "easeInOut",
+                    delay: 0.5,
+                  }}
+                  onClick={() =>
+                    addTolist(anime.id, anime.coverImage.large)
+                  }
+                  className={`h-full w-full transition overflow-hidden rounded-xl relative border-4 cursor-pointer ${
+                    index === -1
+                      ? "border-transparent"
+                      : " border-[#0061fe]"
+                  } aspect-[1/1.6] z-20`}
+                >
+                  <img
+                    src={anime.coverImage.large}
+                    alt={`Anime cover of ${anime.id}`}
+                    className="w-full h-full object-cover transition hover:scale-105"
+                    loading="lazy"
+                  />
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
 }

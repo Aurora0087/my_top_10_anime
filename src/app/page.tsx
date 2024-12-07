@@ -1,5 +1,6 @@
 'use client';
 
+import PerspectiveText from "@/components/PerspectiveText";
 import { motion, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
 import { MouseEventHandler } from "react";
@@ -49,7 +50,7 @@ export default function Home() {
             scale: .5
           }}
           href='/choice' className="bg-[#fe00b0] rounded-full px-16 py-6 font-extrabold overflow-hidden relative text-xl md:text-2xl text-nowrap text-center grid place-content-center pointer-events-auto">
-          Make my top
+          <PerspectiveText label={"Make my top"} />
         </motion.a>
       </div>
     </div>
@@ -131,15 +132,60 @@ function FloatingImages() {
           y: moveY3
         }}
         className=" absolute w-screen h-full pointer-events-none">
-        <div className=" absolute  bottom-8 left-[3%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden opacity-90">
+        <motion.div
+        initial={{
+          x:-10,
+          opacity:0,
+          y:10,
+        }}
+        animate={{
+          x:[-10,0],
+          y:[10,0],
+          opacity:[0.2,1]
+        }}
+        transition={{
+          duration: .3,
+          ease: 'easeInOut'
+        }}
+        className=" absolute  bottom-8 left-[3%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden opacity-90">
           <ImageCard imgUrl={refImages[0]} />
-        </div>
-        <div className=" absolute bottom-[20%] md:bottom-[20%] right-[10%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
+        </motion.div>
+        <motion.div
+        initial={{
+          x:10,
+          opacity:0,
+          y:10,
+        }}
+        animate={{
+          x:[10,0],
+          y:[10,0],
+          opacity:[0.2,1]
+        }}
+        transition={{
+          duration: .3,
+          ease: 'easeInOut'
+        }}
+        className=" absolute bottom-[20%] md:bottom-[20%] right-[10%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
           <ImageCard imgUrl={refImages[1]} />
-        </div>
-        <div className=" absolute top-16 right-48 aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
+        </motion.div>
+        <motion.div
+        initial={{
+          x:10,
+          opacity:0,
+          y:-10,
+        }}
+        animate={{
+          x:[10,0],
+          y:[-10,0],
+          opacity:[0.2,1]
+        }}
+        transition={{
+          duration: .3,
+          ease: 'easeInOut'
+        }}
+        className=" absolute top-16 right-48 aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
           <ImageCard imgUrl={refImages[4]} />
-        </div>
+        </motion.div>
       </motion.div>
       <motion.div
         style={{
@@ -147,15 +193,60 @@ function FloatingImages() {
           y: moveY2
         }}
         className=" absolute w-screen h-full pointer-events-none opacity-95">
-        <div className=" absolute top-8 right-10 aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
+        <motion.div
+        initial={{
+          x:-10,
+          opacity:0,
+          y:-10,
+        }}
+        animate={{
+          x:[-50,0],
+          y:[-50,0],
+          opacity:[0.2,1]
+        }}
+        transition={{
+          duration: .5,
+          ease: 'easeInOut'
+        }}
+        className=" absolute top-8 right-10 aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
           <ImageCard imgUrl={refImages[2]} />
-        </div>
-        <div className=" absolute top-32 right-[50%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
+        </motion.div>
+        <motion.div
+        initial={{
+          x:50,
+          opacity:0,
+          y:-80,
+        }}
+        animate={{
+          x:[50,0],
+          y:[-80,0],
+          opacity:[0.2,1]
+        }}
+        transition={{
+          duration: .5,
+          ease: 'easeInOut'
+        }}
+        className=" absolute top-32 right-[50%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
           <ImageCard imgUrl={refImages[5]} />
-        </div>
-        <div className=" absolute bottom-[35%] md:bottom-[8%] left-[20%] md:right-[35%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
+        </motion.div>
+        <motion.div
+        initial={{
+          x:-50,
+          opacity:0,
+          y:80,
+        }}
+        animate={{
+          x:[-50,0],
+          y:[80,0],
+          opacity:[0.2,1]
+        }}
+        transition={{
+          duration: .5,
+          ease: 'easeInOut'
+        }}
+        className=" absolute bottom-[35%] md:bottom-[8%] left-[20%] md:right-[35%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
           <ImageCard imgUrl={refImages[9]} />
-        </div>
+        </motion.div>
         
       </motion.div>
       <motion.div
@@ -164,15 +255,60 @@ function FloatingImages() {
           y: moveY1
         }}
         className=" absolute w-full h-full pointer-events-none">
-        <div className=" absolute bottom-[10%] left-[25%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
+        <motion.div
+        initial={{
+          x:-50,
+          opacity:0,
+          y:10,
+        }}
+        animate={{
+          x:[-50,0],
+          y:[10,0],
+          opacity:[0.2,1]
+        }}
+        transition={{
+          duration: .75,
+          ease: 'easeInOut'
+        }}
+        className=" absolute bottom-[10%] left-[25%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
           <ImageCard imgUrl={refImages[7]} />
-        </div>
-        <div className=" absolute top-5 left-[5%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
+        </motion.div>
+        <motion.div
+        initial={{
+          x:10,
+          opacity:0,
+          y:-30,
+        }}
+        animate={{
+          x:[10,0],
+          y:[-30,0],
+          opacity:[0.2,1]
+        }}
+        transition={{
+          duration: .75,
+          ease: 'easeInOut'
+        }}
+        className=" absolute top-5 left-[5%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
           <ImageCard imgUrl={refImages[6]} />
-        </div>
-        <div className=" absolute bottom-[25%] right-[30%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
+        </motion.div>
+        <motion.div
+        initial={{
+          x:50,
+          opacity:0,
+          y:30,
+        }}
+        animate={{
+          x:[50,0],
+          y:[30,0],
+          opacity:[0.2,1]
+        }}
+        transition={{
+          duration: .75,
+          ease: 'easeInOut'
+        }}
+        className=" absolute bottom-[25%] right-[30%] aspect-[1/1.6] w-[20vw] max-w-[150px] rounded-xl overflow-hidden">
           <ImageCard imgUrl={refImages[8]} />
-        </div>
+        </motion.div>
         
       </motion.div>
     </div>
@@ -181,7 +317,7 @@ function FloatingImages() {
 
 function ImageCard({ imgUrl }: { imgUrl: string }) {
   return (
-    <div className=" relative w-full h-full group">
+    <div className=" relative w-full h-full group border-4 border-[#0061fe] bg-[#0061fe] rounded-xl">
       <Image src={imgUrl} width={1000} height={1000} alt="" className=" w-full h-full object-cover" />
       <motion.div
         style={{
